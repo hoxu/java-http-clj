@@ -25,16 +25,16 @@
 <p>The response map contains the following keys:</p>
 <ul>
   <li><code>:body</code> - the response body</li>
-  <li><code>:headers</code> - the response headers (map of string form string or list of string)</li>
+  <li><code>:headers</code> - the HTTP headers, a map where keys are strings and values are strings or a list of strings</li>
   <li><code>:status</code> - the HTTP status code</li>
   <li><code>:version</code> - the HTTP protocol version, one of <code>:http1.1</code> or <code>:http2</code></li>
 </ul></div></div></div><div class="public anchor" id="var-send"><h3>send</h3><div class="usage"><code>(send req)</code><code>(send req {:keys [as client raw?], :as opts})</code></div><div class="doc"><div class="markdown"><p>Sends a HTTP request and blocks until a response is returned or the request takes longer than the specified <code>timeout</code>. If the request times out, a <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.net.http/java/net/http/HttpTimeoutException.html">HttpTimeoutException</a> is thrown.</p>
 <p>The <code>req</code> parameter can be a either string URL, a request map, or a <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.net.http/java/net/http/HttpRequest.html">java.net.http.HttpRequest</a>.</p>
 <p>The request map takes the following keys:</p>
 <ul>
-  <li><code>:body</code> - the request body. Can be either a string, a primitive Java byte array, or a java.io.InputStream.</li>
+  <li><code>:body</code> - the request body. Can be a string, a primitive Java byte array or a java.io.InputStream.</li>
   <li><code>:expect-continue?</code> - See the <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.net.http/java/net/http/HttpRequest.Builder.html#expectContinue%28boolean%29">javadoc</a></li>
-  <li><code>:headers</code> - a map of string to a string or a list of strings</li>
+  <li><code>:headers</code> - the HTTP headers, a map where keys are strings and values are strings or a list of strings</li>
   <li><code>:method</code> - the HTTP method as a keyword (e.g <code>:get</code>, <code>:put</code>, <code>:post</code>)</li>
   <li><code>:timeout</code> - the request timeout in milliseconds or a <code>java.time.Duration</code></li>
   <li><code>:uri</code> - the request uri</li>
@@ -43,12 +43,18 @@
 <p><code>opts</code> is a map containing one of the following keywords:</p>
 <ul>
   <li>
-  <p><code>:as</code> - converts the response body to one of the following formats:  <code>:string</code> - a java.lang.String (the default)  <code>:byte-array</code> - a Java primitive byte array.  <code>:input-stream</code> - a java.io.InputStream.</p></li>
+    <p><code>:as</code> - converts the response body to one of the following formats:</p>
+    <ul>
+      <li><code>:string</code> - a java.lang.String (default)</li>
+      <li><code>:byte-array</code> - a Java primitive byte array.</li>
+      <li><code>:input-stream</code> - a java.io.InputStream.</li>
+    </ul>
+  </li>
   <li>
-  <p><code>:client</code> - the <code>java.net.http.HttpClient</code> to use for the request. Defaults to <a href="java-http-clj.core.html#var-default-client">default-client</a>.</p></li>
+  <p><code>:client</code> - the <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.net.http/java/net/http/HttpClient.html">HttpClient</a> to use for the request. If not provided the <a href="java-http-clj.core.html#var-default-client">default-client</a> will be used.</p></li>
   <li>
-  <p><code>:raw?</code> - if true, skip the Ring format conversion and return the <code>java.net.http.HttpResponse</code></p></li>
+  <p><code>:raw?</code> - if true, skip the Ring format conversion and return the [HttpResponse](<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.net.http/java/net/http/HttpResponse.html">https://docs.oracle.com/en/java/javase/11/docs/api/java.net.http/java/net/http/HttpResponse.html</a></p></li>
 </ul></div></div></div><div class="public anchor" id="var-send-async"><h3>send-async</h3><div class="usage"><code>(send-async req)</code><code>(send-async req opts)</code><code>(send-async req {:keys [as client raw?], :as opts} callback ex-handler)</code></div><div class="doc"><div class="markdown"><p>Sends a request asynchronously and immediately returns a <a href="https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html">CompletableFuture</a>. Converts the  eventual response to a map as per <a href="java-http-clj.core.html#var-response-.3Emap">response-&gt;map</a>.</p>
 <p>See <a href="java-http-clj.core.html#var-send">send</a> for a description of <code>req</code> and <code>opts</code>.</p>
-<p><code>callback</code> is a one argument function that will be applied to the response map.</p>
-<p><code>ex-handler</code> is a one argument function that will be called if an exception is thrown  anywhere during the request.</p></div></div></div></div></body></html>
+<p><code>callback</code> is a one argument function that will be applied to the response on completion.</p>
+<p><code>ex-handler</code> is a one argument function that will be called if an exception is thrown anywhere during the request.</p></div></div></div></div></body></html>
